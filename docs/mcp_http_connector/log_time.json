@@ -1,0 +1,1 @@
+{"jsonrpc":"2.0","id":6,"method":"tools/call","params":{"name":"log_time","arguments":{"employee_name":"Curl Tester","project":"Website Redesign","entry_date":"2026-09-20","hours":1.5,"description":"HTTP connector smoke test"}}}
