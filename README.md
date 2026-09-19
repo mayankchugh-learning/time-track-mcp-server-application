@@ -60,6 +60,9 @@ MCP-only HTTP via the FastMCP CLI (no website, no `/api` routes). Default `fastm
 uv run fastmcp run .\main.py --transport http --port 8000
 ```
 
+Raw curl handshake and every tool/resource/prompt call:
+[docs/mcp_http_connector.md](docs/mcp_http_connector.md).
+
 Learning file (REST first, then `FastMCP.from_fastapi` — not the production design):
 
 ```bash
@@ -123,7 +126,8 @@ time-track-mcp-server-application/
 │   ├── MAIN.md                 Walkthrough of production main.py
 │   ├── main.html               Same walkthrough, browser study page
 │   ├── MAIN_TO_UNDERSTAND.md
-│   └── main-to-understand.html
+│   ├── main-to-understand.html
+│   └── mcp_http_connector.md   curl + other ways to test /mcp HTTP
 └── pyproject.toml
 ```
 
@@ -138,3 +142,4 @@ Two mounting rules that break `/mcp` if you get them wrong:
 - [Learn it, then build it again](docs/LEARNING_AND_REBUILD.md) — rebuild from an empty folder, with checkpoints
 - [`main.py` walkthrough](docs/MAIN.md) — MCP first, mount, lifespan, quiz ([HTML](docs/main.html))
 - [`main_to_understand.py` walkthrough](docs/MAIN_TO_UNDERSTAND.md) — REST first, `from_fastapi`, startup trap, quiz ([HTML](docs/main-to-understand.html))
+- [MCP HTTP connector](docs/mcp_http_connector.md) — curl handshake for `fastmcp run --transport http`, plus CLI / Inspector / Cursor
