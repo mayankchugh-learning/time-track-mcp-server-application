@@ -1,8 +1,12 @@
-# MCP HTTP connector — curl tests
+# MCP HTTP connector — self-learning (write the JSON yourself)
 
-Ready-to-run copy: payloads already live in `docs/mcp_http_connector/*.json`.
-To learn by writing each JSON-RPC body yourself, use
-[mcp_http_connector_learning.md](mcp_http_connector_learning.md).
+This is the **previous** version of [mcp_http_connector.md](mcp_http_connector.md).
+Keep it for study: you type each JSON-RPC body, save it as a file, then curl it.
+The other file is the ready-to-run copy that points at `docs/mcp_http_connector/*.json`.
+
+---
+
+# MCP HTTP connector — curl tests
 
 This file is a raw-protocol client for the **MCP-only HTTP** process:
 
@@ -15,9 +19,8 @@ That command serves **only** `mcp = FastMCP("TimeTrack")` at
 (website, Swagger, `/api/*`).
 
 On Windows PowerShell, use `curl.exe` (plain `curl` is often
-`Invoke-WebRequest`). Bodies live in `docs/mcp_http_connector/*.json`.
-From the **project root**, pass `--data-binary "@docs/mcp_http_connector/init.json"`.
-Inline `-d "{...}"` breaks on nested braces.
+`Invoke-WebRequest`). Write JSON to a file and pass `--data-binary @file`
+— inline `-d "{...}"` breaks on nested braces.
 
 Verified against FastMCP 4.0.5 on this repo.
 
@@ -63,15 +66,26 @@ Streamable HTTP needs three things on every real call:
 Skip step 3 and later `tools/list` / `tools/call` fail with
 “Invalid request parameters” or “before initialization was complete”.
 
-Payloads are already in `docs/mcp_http_connector/`. Run curls from the
-project root.
+Create these two files in the project root, then run the curls.
+
+`init.json`
+
+```json
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"curl","version":"1.0"}}}
+```
+
+`initialized.json`
+
+```json
+{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}
+```
 
 ```powershell
 # 1. Start a session. Copy mcp-session-id from the response headers.
 curl.exe -i -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
-  --data-binary "@docs/mcp_http_connector/init.json"
+  --data-binary "@init.json"
 ```
 
 Expected: `200`, `content-type: text/event-stream`, SSE `event: message`
@@ -89,7 +103,7 @@ curl.exe -i -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/initialized.json"
+  --data-binary "@initialized.json"
 ```
 
 Reuse `$sid` on every request below until you restart the server.
@@ -98,33 +112,51 @@ Reuse `$sid` on every request below until you restart the server.
 
 ## List surface
 
+`tools_list.json`
+
+```json
+{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}
+```
+
 ```powershell
 curl.exe -i -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/tools_list.json"
+  --data-binary "@tools_list.json"
 ```
 
 Expected tools: `log_time`, `get_timesheet`, `get_project_summary`,
 `list_projects`.
 
+`resources_list.json`
+
+```json
+{"jsonrpc":"2.0","id":7,"method":"resources/list","params":{}}
+```
+
 ```powershell
 curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/resources_list.json"
+  --data-binary "@resources_list.json"
 ```
 
 Expected: `timesheet://projects`.
 
+`prompts_list.json`
+
+```json
+{"jsonrpc":"2.0","id":9,"method":"prompts/list","params":{}}
+```
+
 ```powershell
 curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/prompts_list.json"
+  --data-binary "@prompts_list.json"
 ```
 
 Expected: `generate_weekly_report`.
@@ -133,12 +165,10 @@ Expected: `generate_weekly_report`.
 
 ## Call every tool
 
-```powershell
-curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
-  -H "Content-Type: application/json" `
-  -H "Accept: application/json, text/event-stream" `
-  -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/list_projects.json"
+`list_projects.json`
+
+```json
+{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"list_projects","arguments":{}}}
 ```
 
 ```powershell
@@ -146,7 +176,13 @@ curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/get_timesheet.json"
+  --data-binary "@list_projects.json"
+```
+
+`get_timesheet.json`
+
+```json
+{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"get_timesheet","arguments":{"employee_name":"Asha Patel","start_date":"","end_date":""}}}
 ```
 
 ```powershell
@@ -154,30 +190,46 @@ curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/get_project_summary.json"
+  --data-binary "@get_timesheet.json"
 ```
 
-`log_time.json` **writes** a row. Edit that file if you do not want the
-smoke-test entry.
+`get_project_summary.json`
+
+```json
+{"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"get_project_summary","arguments":{"project":"Website Redesign"}}}
+```
 
 ```powershell
 curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/log_time.json"
+  --data-binary "@get_project_summary.json"
+```
+
+`log_time.json` — this **writes** a row. Change the date/name if you
+do not want a smoke-test entry in SQLite.
+
+```json
+{"jsonrpc":"2.0","id":6,"method":"tools/call","params":{"name":"log_time","arguments":{"employee_name":"Curl Tester","project":"Website Redesign","entry_date":"2026-09-20","hours":1.5,"description":"HTTP connector smoke test"}}}
+```
+
+```powershell
+curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
+  -H "Content-Type: application/json" `
+  -H "Accept: application/json, text/event-stream" `
+  -H "Mcp-Session-Id: $sid" `
+  --data-binary "@log_time.json"
 ```
 
 ---
 
 ## Resource and prompt
 
-```powershell
-curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
-  -H "Content-Type: application/json" `
-  -H "Accept: application/json, text/event-stream" `
-  -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/resources_read.json"
+`resources_read.json`
+
+```json
+{"jsonrpc":"2.0","id":8,"method":"resources/read","params":{"uri":"timesheet://projects"}}
 ```
 
 ```powershell
@@ -185,7 +237,21 @@ curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
   -H "Content-Type: application/json" `
   -H "Accept: application/json, text/event-stream" `
   -H "Mcp-Session-Id: $sid" `
-  --data-binary "@docs/mcp_http_connector/prompts_get.json"
+  --data-binary "@resources_read.json"
+```
+
+`prompts_get.json`
+
+```json
+{"jsonrpc":"2.0","id":10,"method":"prompts/get","params":{"name":"generate_weekly_report","arguments":{"employee_name":"Asha Patel","week_start":"2026-09-14"}}}
+```
+
+```powershell
+curl.exe -sS -X POST http://127.0.0.1:8000/mcp `
+  -H "Content-Type: application/json" `
+  -H "Accept: application/json, text/event-stream" `
+  -H "Mcp-Session-Id: $sid" `
+  --data-binary "@prompts_get.json"
 ```
 
 A successful MCP reply is SSE, not pretty JSON:

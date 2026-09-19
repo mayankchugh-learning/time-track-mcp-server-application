@@ -127,7 +127,8 @@ time-track-mcp-server-application/
 │   ├── main.html               Same walkthrough, browser study page
 │   ├── MAIN_TO_UNDERSTAND.md
 │   ├── main-to-understand.html
-│   └── mcp_http_connector.md   curl + other ways to test /mcp HTTP
+│   ├── mcp_http_connector.md           ready-to-run curls (JSON files included)
+│   └── mcp_http_connector_learning.md  same guide; write each JSON body yourself
 └── pyproject.toml
 ```
 
@@ -143,3 +144,4 @@ Two mounting rules that break `/mcp` if you get them wrong:
 - [`main.py` walkthrough](docs/MAIN.md) — MCP first, mount, lifespan, quiz ([HTML](docs/main.html))
 - [`main_to_understand.py` walkthrough](docs/MAIN_TO_UNDERSTAND.md) — REST first, `from_fastapi`, startup trap, quiz ([HTML](docs/main-to-understand.html))
 - [MCP HTTP connector](docs/mcp_http_connector.md) — curl handshake for `fastmcp run --transport http`, plus CLI / Inspector / Cursor
+- [MCP HTTP connector (self-learning)](docs/mcp_http_connector_learning.md) — same protocol; you create each JSON file
