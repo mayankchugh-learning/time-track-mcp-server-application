@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" data-page="main-to-understand">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>main_to_understand.py · Self-learning walkthrough</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface2: #1e1e24;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #e8e6e0;
+    --muted: #888580;
+    --accent: #f0a500;
+    --accent2: #7dd4c6;
+    --accent3: #f07a6b;
+    --accent4: #9b8fff;
+    --green: #6bcf7f;
+    --tag-bg: rgba(240,165,0,0.12);
+    --tag-text: #f0a500;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+  .header {
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 2rem;
+    margin-bottom: 3rem;
+  }
+  .header-meta {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1.08;
+    color: #fff;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+  .header h1 span { color: var(--accent); }
+  .header-sub {
+    font-size: 1.05rem;
+    color: var(--muted);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .tag {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-right: 6px;
+    margin-top: 0.8rem;
+  }
+  .section { margin-bottom: 3.5rem; }
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin: 1.8rem 0 0.7rem;
+  }
+  p { margin-bottom: 0.9rem; }
+  p:last-child { margin-bottom: 0; }
+  a { color: var(--accent2); }
+  .callout {
+    border-left: 3px solid var(--accent);
+    background: rgba(240,165,0,0.06);
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    font-size: 0.97rem;
+    color: #c8c4be;
+  }
+  .callout.teal { border-color: var(--accent2); background: rgba(125,212,198,0.06); font-style: normal; }
+  .callout.red { border-color: var(--accent3); background: rgba(240,122,107,0.06); font-style: normal; }
+  .callout.purple { border-color: var(--accent4); background: rgba(155,143,255,0.06); }
+  .pipeline { display: flex; flex-direction: column; margin: 1.5rem 0; }
+  .pipeline-item { display: flex; align-items: stretch; gap: 1rem; }
+  .pipeline-left {
+    display: flex; flex-direction: column; align-items: center;
+    flex-shrink: 0; width: 36px;
+  }
+  .pipeline-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500;
+  }
+  .pipeline-num.gold { background: rgba(240,165,0,0.2); color: var(--accent); border: 1px solid rgba(240,165,0,0.4); }
+  .pipeline-num.teal { background: rgba(125,212,198,0.2); color: var(--accent2); border: 1px solid rgba(125,212,198,0.4); }
+  .pipeline-num.coral { background: rgba(240,122,107,0.2); color: var(--accent3); border: 1px solid rgba(240,122,107,0.4); }
+  .pipeline-line { width: 1px; flex: 1; background: var(--border2); margin: 4px auto 0; min-height: 24px; }
+  .pipeline-content { flex: 1; padding-bottom: 1.75rem; }
+  .pipeline-item:last-child .pipeline-content { padding-bottom: 0; }
+  .pipeline-title {
+    font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 600;
+    color: #fff; margin-bottom: 0.4rem; padding-top: 7px;
+  }
+  .pipeline-desc { font-size: 0.94rem; color: #aaa8a2; line-height: 1.65; }
+  code {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85em;
+    background: var(--surface2);
+    color: var(--accent2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  pre {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    margin: 1.15rem 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #c8c4be;
+  }
+  pre code { background: none; border: none; padding: 0; color: inherit; }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin: 1.25rem 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 600;
+    color: #fff; margin-bottom: 0.35rem;
+  }
+  .card-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
+  .card.highlight { border-color: rgba(240,165,0,0.3); background: rgba(240,165,0,0.04); }
+  .card.highlight .card-title { color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.93rem; margin: 1.25rem 0; }
+  th {
+    font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 600;
+    text-align: left; padding: 0.6rem 0.9rem;
+    border-bottom: 1px solid var(--border2);
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    color: #c0beb8; vertical-align: top; line-height: 1.55;
+  }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--text); font-family: 'IBM Plex Mono', monospace; font-size: 0.83rem; }
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 3rem;
+    font-size: 0.92rem;
+  }
+  .toc-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.75rem;
+  }
+  .toc ol { padding-left: 1.4rem; }
+  .toc li { margin: 0.3rem 0; }
+  .toc a { color: #c0beb8; text-decoration: none; }
+  .toc a:hover { color: var(--accent); }
+  details {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.9rem 1.15rem;
+    margin: 0.75rem 0;
+  }
+  summary {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+  }
+  details[open] summary { margin-bottom: 0.7rem; color: var(--accent); }
+  .quiz-a { font-size: 0.95rem; color: #c8c4be; }
+  ul, ol { margin: 0.6rem 0 1rem 1.3rem; }
+  li { margin: 0.35rem 0; }
+  .back { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); }
+  @media (max-width: 600px) {
+    body { padding: 1.5rem 1rem 4rem; }
+    .header h1 { font-size: 2rem; }
+    h2 { font-size: 1.4rem; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <p class="header-meta">TimeTrack · learning file</p>
+  <h1>Read <span>main_to_understand.py</span> until you can rewrite it</h1>
+  <p class="header-sub">REST first. Then one-line MCP. Then the traps that keep this from being production.</p>
+  <span class="tag">FastAPI</span>
+  <span class="tag">FastMCP.from_fastapi</span>
+  <span class="tag">STDIO vs HTTP</span>
+  <span class="tag">Least privilege</span>
+  <p class="back" style="margin-top:1.2rem">Keep <code>../main_to_understand.py</code> open beside this page. Markdown twin: <a href="MAIN_TO_UNDERSTAND.md">MAIN_TO_UNDERSTAND.md</a>.</p>
+</header>
+
+<nav class="toc">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#s1">What this file is</a></li>
+    <li><a href="#s2">Four blocks</a></li>
+    <li><a href="#s3">Block A — REST first</a></li>
+    <li><a href="#s4">Block B — from_fastapi</a></li>
+    <li><a href="#s5">The startup trap</a></li>
+    <li><a href="#s6">Block C — SQL tool + schema</a></li>
+    <li><a href="#s7">Block D — commented production</a></li>
+    <li><a href="#s8">What the model sees</a></li>
+    <li><a href="#s9">Practice and quiz</a></li>
+  </ol>
+</nav>
+
+<section class="section" id="s1">
+  <div class="section-label">01 — Purpose</div>
+  <h2>What this file is (and is not)</h2>
+  <p>TimeTrack is one idea: billable hours in SQLite, readable by a person over HTTP and by an assistant over MCP. This file is the <strong>walkthrough style</strong>: write a normal API, wrap it as MCP, then compare that to hand-curated tools left in comments.</p>
+  <div class="card-grid">
+    <div class="card highlight">
+      <div class="card-title">This file</div>
+      <div class="card-desc">FastAPI first. <code>from_fastapi</code> copies every route into tools. Extra raw SQL. <code>mcp.run()</code> for STDIO. Nothing mounted at <code>/mcp</code>.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Production main.py</div>
+      <div class="card-desc">Curated <code>@mcp.tool</code> first. <code>http_app(path="/")</code> plus <code>mount("/mcp")</code>. Prompt + <code>timesheet://projects</code>. One process, two doors.</div>
+    </div>
+  </div>
+  <div class="callout">Official FastMCP docs make the same split: generate an MCP server <em>from</em> FastAPI, versus mount an MCP server <em>into</em> FastAPI. You are on the first path only.</div>
+  <p>You need a sibling <code>database.py</code> (<code>init_db</code>, list/log/summary/timesheet, and <code>execute_query</code>). If it is missing here, copy it from the complete TimeTrack pack or rebuild Phase 2 of <a href="LEARNING_AND_REBUILD.md">LEARNING_AND_REBUILD.md</a>.</p>
+</section>
+
+<section class="section" id="s2">
+  <div class="section-label">02 — Map</div>
+  <h2>The file in four blocks</h2>
+  <p>Python executes top to bottom at <strong>import</strong> time. That fact explains every trap later.</p>
+  <div class="pipeline">
+    <div class="pipeline-item">
+      <div class="pipeline-left"><div class="pipeline-num gold">A</div><div class="pipeline-line"></div></div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Lines 1–45 · REST</div>
+        <div class="pipeline-desc"><code>init_db()</code>, FastAPI <code>app</code>, five <code>/api/*</code> routes, <code>NewEntry</code> for POST. Comments tell you to run uvicorn on port 9998.</div>
+      </div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-left"><div class="pipeline-num teal">B</div><div class="pipeline-line"></div></div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Lines 54–67 · Convert + first run</div>
+        <div class="pipeline-desc"><code>mcp = FastMCP.from_fastapi(app=app)</code> then <code>mcp.run()</code> if the file is the main script.</div>
+      </div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-left"><div class="pipeline-num coral">C</div><div class="pipeline-line"></div></div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Lines 70–92 · Extra MCP surface</div>
+        <div class="pipeline-desc">Raw SQL tool + resource <code>timesheet://schema</code>. Not REST. Easy to never register — see the trap.</div>
+      </div>
+    </div>
+    <div class="pipeline-item">
+      <div class="pipeline-left"><div class="pipeline-num gold">D</div></div>
+      <div class="pipeline-content">
+        <div class="pipeline-title">Lines 94–143 · Commented production + duplicate run</div>
+        <div class="pipeline-desc">The tools, resource, and prompt you would actually ship. Second <code>mcp.run()</code> is dead if the first one already blocked.</div>
+      </div>
+    </div>
+  </div>
+  <p><code>StaticFiles</code> is imported and never used. This learning file never serves a website.</p>
+</section>
+
+<section class="section" id="s3">
+  <div class="section-label">03 — Block A</div>
+  <h2>REST first</h2>
+  <p><code>db.init_db()</code> runs when the module is imported, so the table exists before Swagger loads. Each handler is a one-liner into <code>database.py</code>. REST does not own SQL.</p>
+  <table>
+    <thead><tr><th>Method</th><th>Path</th><th>Database call</th></tr></thead>
+    <tbody>
+      <tr><td>GET</td><td>/api/entries</td><td>list_all_entries()</td></tr>
+      <tr><td>GET</td><td>/api/projects</td><td>list_projects()</td></tr>
+      <tr><td>GET</td><td>/api/projects/{project}/summary</td><td>get_project_summary(project)</td></tr>
+      <tr><td>GET</td><td>/api/timesheet/{employee_name}</td><td>get_timesheet(...)</td></tr>
+      <tr><td>POST</td><td>/api/entries</td><td>log_time(...) via NewEntry</td></tr>
+    </tbody>
+  </table>
+  <p>Only <code>api_list_all_entries</code> has a docstring. After auto-wrap, that text becomes the tool description. The other four leak names like <code>api_list_projects</code> with almost no help for the model.</p>
+  <p><code>NewEntry</code> is defined after the GET routes and before POST. That is legal: Python only needs the class when the decorator runs. FastAPI uses it for JSON validation and for the Swagger form.</p>
+  <div class="callout teal">The comment in the file says <code>-reload</code>. The real flag is <code>--reload</code>. Port 9998 keeps this off production 8000.</div>
+<pre><code>uv run uvicorn main_to_understand:app --port 9998 --reload
+# http://127.0.0.1:9998/docs</code></pre>
+  <p>Uvicorn serves <code>app</code>. It does <strong>not</strong> start <code>mcp.run()</code>. Swagger will not show <code>/mcp</code>.</p>
+</section>
+
+<section class="section" id="s4">
+  <div class="section-label">04 — Block B</div>
+  <h2>from_fastapi builds a second object</h2>
+<pre><code>from fastmcp import FastMCP
+mcp = FastMCP.from_fastapi(app=app)
+
+if __name__ == "__main__":
+    mcp.run()</code></pre>
+  <p><code>from_fastapi</code> does not add routes to <code>app</code>. It reads the OpenAPI spec and creates MCP tools (every endpoint, by default).</p>
+  <table>
+    <thead><tr><th>Command</th><th>What starts</th><th>Client sees</th></tr></thead>
+    <tbody>
+      <tr><td>uvicorn …:app --port 9998</td><td>FastAPI ASGI</td><td>REST + /docs</td></tr>
+      <tr><td>python main_to_understand.py</td><td>mcp.run() (STDIO)</td><td>MCP over a pipe</td></tr>
+    </tbody>
+  </table>
+  <div class="callout red">A GET to <code>http://127.0.0.1:9998/mcp</code> is a FastAPI 404. This file never mounts. Generation and mounting are two different integrations.</div>
+</section>
+
+<section class="section" id="s5">
+  <div class="section-label">05 — Trap</div>
+  <h2>mcp.run() before extra tools</h2>
+  <p><code>mcp.run()</code> is a blocking server loop. It does not return. When you start the file as a script:</p>
+  <ol>
+    <li>Build FastAPI routes</li>
+    <li><code>from_fastapi</code></li>
+    <li><code>mcp.run()</code> — process sits here forever</li>
+    <li><code>execute_query_dynamically</code> — never registered</li>
+    <li><code>timesheet://schema</code> — never registered</li>
+    <li>Second <code>mcp.run()</code> — dead code</li>
+  </ol>
+  <p>Uvicorn <strong>imports</strong> the module, so both <code>if __name__</code> blocks are skipped. Block C still runs at import time. The in-memory <code>mcp</code> object then has the extra tool — unused, unless you later call <code>mcp.run()</code> or mount it.</p>
+  <div class="callout purple">Keep one <code>mcp.run()</code> at the <em>bottom</em> of the file. The first <code>if __name__</code> is the lesson, not a style to copy.</div>
+</section>
+
+<section class="section" id="s6">
+  <div class="section-label">06 — Block C</div>
+  <h2>SQL tool + schema resource</h2>
+  <p>These are not REST routes. They exist only on <code>mcp</code>.</p>
+  <div class="card-grid">
+    <div class="card highlight">
+      <div class="card-title">Tool · execute_query_dynamically</div>
+      <div class="card-desc">The model invents SQL. Demo-friendly. Unsafe to ship: DROP TABLE, inflated hours, prompt injection. Also brittle if <code>_row_to_dict</code> expects <code>time_entries</code> columns.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Resource · timesheet://schema</div>
+      <div class="card-desc">Pullable context, not an action. Hand-written DDL snapshot — stale if the table changes. Production uses live <code>timesheet://projects</code> instead.</div>
+    </div>
+  </div>
+  <p>MCP primitives: a <strong>tool</strong> does something, a <strong>resource</strong> is context, a <strong>prompt</strong> guides the next tool calls. Least privilege means you expose <code>log_time</code> / <code>get_timesheet</code> / summaries — not a database root shell.</p>
+</section>
+
+<section class="section" id="s7">
+  <div class="section-label">07 — Block D</div>
+  <h2>The commented production pattern</h2>
+  <p>Uncomment these in your head. They are what production <code>main.py</code> ships.</p>
+  <table>
+    <thead><tr><th>Kind</th><th>Name</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Tool</td><td>log_time</td><td>Insert; docstring requires YYYY-MM-DD</td></tr>
+      <tr><td>Tool</td><td>get_timesheet</td><td>Empty strings become None so date filters stay optional</td></tr>
+      <tr><td>Tool</td><td>get_project_summary</td><td>Already grouped for speech</td></tr>
+      <tr><td>Tool</td><td>list_projects</td><td>Distinct names</td></tr>
+      <tr><td>Resource</td><td>timesheet://projects</td><td>Same list, as context, so spelling stays stable</td></tr>
+      <tr><td>Prompt</td><td>generate_weekly_report</td><td>Recipe: call get_timesheet, group, do not invent hours</td></tr>
+    </tbody>
+  </table>
+  <div class="callout">A prompt does not query SQLite. Auto-wrap cannot invent it. That is the interview line: auto-wrap copies HTTP; curated tools add behavior HTTP never had.</div>
+</section>
+
+<section class="section" id="s8">
+  <div class="section-label">08 — Names</div>
+  <h2>What the model actually sees</h2>
+  <p>People in Swagger think in paths. Models think in tool names. Auto-wrap typically yields <code>api_list_projects</code>, not <code>list_projects</code>.</p>
+  <pre><code>Person ──HTTP──► FastAPI app  ──┐
+                                 ├── database.py ── SQLite
+Assistant ─MCP─► FastMCP mcp ──┘</code></pre>
+  <p>Preferred habit: APIs (or <code>database.py</code>) first, MCP second. Do not mutate working OpenAPI just to get nicer tool docs. FastAPI and FastMCP are different products that happen to compose.</p>
+  <h3>Why you do not ship this file</h3>
+  <ul>
+    <li>HTTP names leak; you cannot combine two APIs into one tool.</li>
+    <li>Raw SQL violates least privilege.</li>
+    <li>No <code>/mcp</code> mount for Streamable HTTP beside the website.</li>
+    <li>Startup order can drop later primitives.</li>
+    <li>Prompts cannot be generated from REST.</li>
+  </ul>
+</section>
+
+<section class="section" id="s9">
+  <div class="section-label">09 — Practice</div>
+  <h2>Do these, then quiz yourself</h2>
+  <ol>
+    <li>Move the first <code>mcp.run()</code> to the bottom. Predict whether Inspector lists <code>execute_query_dynamically</code>. Check.</li>
+    <li>Add a docstring to <code>api_list_projects</code>. Inspect the generated tool description.</li>
+    <li>Sketch REST <code>POST /api/entries</code> vs curated <code>log_time</code>. Same <code>db.log_time</code>, different names.</li>
+    <li>Predict the URL if you later set <code>http_app(path="/mcp")</code> and also <code>mount("/mcp")</code>. Answer: <code>/mcp/mcp</code>.</li>
+  </ol>
+
+  <h3>Quiz</h3>
+  <details>
+    <summary>Q1. from_fastapi adds /mcp to the FastAPI app. True or false?</summary>
+    <p class="quiz-a"><strong>False.</strong> It builds a separate FastMCP instance. <code>/mcp</code> appears only if you mount <code>mcp.http_app(...)</code>.</p>
+  </details>
+  <details>
+    <summary>Q2. uvicorn …:app — is execute_query defined? Can a browser call it?</summary>
+    <p class="quiz-a">Defined: yes (uvicorn imports the whole file and skips <code>mcp.run()</code>). Browser: no. Uvicorn serves <code>app</code>, not <code>mcp</code>.</p>
+  </details>
+  <details>
+    <summary>Q3. python main_to_understand.py as committed — does the schema resource register?</summary>
+    <p class="quiz-a"><strong>No.</strong> The first <code>mcp.run()</code> blocks before <code>@mcp.resource</code> runs.</p>
+  </details>
+  <details>
+    <summary>Q4. Why invent “website redesign” with auto-wrap but not with timesheet://projects?</summary>
+    <p class="quiz-a">Auto-wrap does not give a live list of canonical names. A resource that returns <code>list_projects()</code> does.</p>
+  </details>
+  <details>
+    <summary>Q5. A prompt is a SQL query. True or false?</summary>
+    <p class="quiz-a"><strong>False.</strong> A prompt returns instructions. Tools (or REST) touch the database.</p>
+  </details>
+
+  <div class="callout teal" style="margin-top:2rem">When you can draw <code>app</code> vs <code>mcp</code>, explain the first <code>if __name__</code> trap, and say why raw SQL should not ship — close this file and rebuild the mounted shape in LEARNING_AND_REBUILD.md Phases 5–7.</div>
+  <p class="back">Also: <a href="ARCHITECTURE.md">ARCHITECTURE.md</a> · <a href="LEARNING_AND_REBUILD.md">LEARNING_AND_REBUILD.md</a></p>
+</section>
+
+</body>
+</html>

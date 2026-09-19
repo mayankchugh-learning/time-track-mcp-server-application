@@ -1,0 +1,4 @@
+# Direct dependencies for TimeTrack (mirrors pyproject.toml)
+fastapi>=0.141.1
+fastmcp>=4.0.3
+uvicorn[standard]>=0.52.4

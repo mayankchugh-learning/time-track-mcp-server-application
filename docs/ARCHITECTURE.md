@@ -47,7 +47,7 @@ The teaching goal is a **real shared system of record**, not a toy that only the
 | FastAPI + mounted MCP | One port, one process, one lifespan. The website and the assistant share uptime. |
 | Static frontend | The UI is just `fetch('/api/...')`. No framework required to understand the contract. |
 
-`main_to_understand.py` is a **learning contrast**, not the production entrypoint. It auto-wraps FastAPI routes into MCP and also exposes a raw SQL tool. See [Learning and rebuild guide](LEARNING_AND_REBUILD.md#phase-8-understand-the-alternate-learning-file).
+`main_to_understand.py` is a **learning contrast**, not the production entrypoint. It auto-wraps FastAPI routes into MCP and also exposes a raw SQL tool. Walk through it line by line in [MAIN_TO_UNDERSTAND.md](MAIN_TO_UNDERSTAND.md) or the study page [main-to-understand.html](main-to-understand.html). Rebuild context: [Learning and rebuild guide](LEARNING_AND_REBUILD.md#phase-8-understand-the-alternate-learning-file).
 
 ---
 
@@ -67,8 +67,10 @@ time-track-mcp-server/
 ├── uv.lock                 Locked dependency versions
 ├── .python-version         3.13
 └── docs/
-    ├── ARCHITECTURE.md     This file
-    └── LEARNING_AND_REBUILD.md
+    ├── ARCHITECTURE.md            This file
+    ├── LEARNING_AND_REBUILD.md    Rebuild from empty
+    ├── MAIN_TO_UNDERSTAND.md      Walkthrough of the learning file
+    └── main-to-understand.html    Same walkthrough, browser study page
 ```
 
 The README mentions `timetrack_notebook.ipynb`. That notebook is **not in this repo**. The rebuild guide replaces it.
@@ -365,6 +367,8 @@ Written as a study file:
 1. Build FastAPI + REST exactly like a normal API tutorial.
 2. `mcp = FastMCP.from_fastapi(app=app)` so every route becomes a tool.
 3. Extra: `execute_query_dynamically` + resource `timesheet://schema`.
+
+Full walkthrough (blocks, `mcp.run()` trap, quiz): **[MAIN_TO_UNDERSTAND.md](MAIN_TO_UNDERSTAND.md)** · **[main-to-understand.html](main-to-understand.html)**.
 
 Run it separately:
 

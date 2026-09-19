@@ -488,7 +488,9 @@ Restart Claude Desktop after saving.
 
 ## Phase 8 — Understand the alternate learning file
 
-Do **not** merge this into `main.py`. Read `main_to_understand.py` and run it on another port:
+Do **not** merge this into `main.py`. Dedicated walkthrough (line map, startup trap, quiz): **[MAIN_TO_UNDERSTAND.md](MAIN_TO_UNDERSTAND.md)** · study page **[main-to-understand.html](main-to-understand.html)**.
+
+Read `main_to_understand.py` and run it on another port:
 
 ```bash
 uv run uvicorn main_to_understand:app --port 9998 --reload
@@ -501,13 +503,14 @@ Notice three differences:
 | Order | MCP first, then FastAPI with lifespan | FastAPI first |
 | How tools appear | You declare each `@mcp.tool` | `FastMCP.from_fastapi(app=app)` |
 | Extra surface | None | `execute_query_dynamically` + `timesheet://schema` |
-| `if __name__` | unused | `mcp.run()` (stdio-style) |
+| `if __name__` | unused | `mcp.run()` (stdio-style) — and the **first** one sits *before* extra tools |
 
 `from_fastapi` is a shortcut: every REST route becomes a tool. That is useful for 10 minutes of “does wrapping work?” It is a weak long-term API because:
 
 - Route names and HTTP details leak into the model’s tool list.
 - You cannot attach a prompt or a `timesheet://` resource by thinking only in REST.
 - A generic SQL tool (`execute_query`) violates least privilege.
+- `uvicorn …:app` serves REST only; this file never mounts `/mcp`.
 
 After you understand it, close that file and keep shipping `main.py`.
 
