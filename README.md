@@ -45,7 +45,7 @@ $env:TIMETRACK_DB_PATH = ".\timetrack.db"
 Production app (website + MCP on one port):
 
 ```bash
-uv run uvicorn main:app --reload
+uv run uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
 | URL | Door |
