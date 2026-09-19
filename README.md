@@ -42,7 +42,7 @@ $env:TIMETRACK_DB_PATH = ".\timetrack.db"
 
 ## Run
 
-Production app (website + MCP on one port):
+Production app (website + REST + MCP on one port). `mcp.http_app()` only builds the ASGI app; **uvicorn** is what actually listens:
 
 ```bash
 uv run uvicorn main:app --reload --host 127.0.0.1 --port 8000
@@ -54,6 +54,12 @@ uv run uvicorn main:app --reload --host 127.0.0.1 --port 8000
 | http://127.0.0.1:8000/docs | Swagger for REST |
 | http://127.0.0.1:8000/mcp | MCP Streamable HTTP |
 
+MCP-only HTTP via the FastMCP CLI (no website, no `/api` routes). Default `fastmcp run` is **stdio**; pass `--transport http` to listen on a port:
+
+```bash
+uv run fastmcp run .\main.py --transport http --port 8000
+```
+
 Learning file (REST first, then `FastMCP.from_fastapi` — not the production design):
 
 ```bash
@@ -62,7 +68,7 @@ uv run uvicorn main_to_understand:app --port 9998 --reload
 
 Swagger: http://127.0.0.1:9998/docs
 
-STDIO MCP server (Inspector / `fastmcp run`):
+STDIO MCP server (Inspector / `fastmcp run` default):
 
 ```bash
 uv run fastmcp run .\main_to_understand.py
@@ -114,6 +120,8 @@ time-track-mcp-server-application/
 ├── docs/
 │   ├── ARCHITECTURE.md
 │   ├── LEARNING_AND_REBUILD.md
+│   ├── MAIN.md                 Walkthrough of production main.py
+│   ├── main.html               Same walkthrough, browser study page
 │   ├── MAIN_TO_UNDERSTAND.md
 │   └── main-to-understand.html
 └── pyproject.toml
@@ -128,4 +136,5 @@ Two mounting rules that break `/mcp` if you get them wrong:
 
 - [Application architecture](docs/ARCHITECTURE.md) — process shape, schema, REST, MCP, request flows
 - [Learn it, then build it again](docs/LEARNING_AND_REBUILD.md) — rebuild from an empty folder, with checkpoints
+- [`main.py` walkthrough](docs/MAIN.md) — MCP first, mount, lifespan, quiz ([HTML](docs/main.html))
 - [`main_to_understand.py` walkthrough](docs/MAIN_TO_UNDERSTAND.md) — REST first, `from_fastapi`, startup trap, quiz ([HTML](docs/main-to-understand.html))

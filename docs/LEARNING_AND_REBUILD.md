@@ -2,7 +2,7 @@
 
 This guide is a rebuild of the repository from an empty folder. Each phase ends with a **checkpoint** you can compare against this repo. If a checkpoint fails, fix that phase before moving on.
 
-Read [ARCHITECTURE.md](ARCHITECTURE.md) once before you start, then keep it open as a map.
+Read [ARCHITECTURE.md](ARCHITECTURE.md) once before you start, then keep it open as a map. When you reach the production entrypoint, read [`main.py` line by line](MAIN.md).
 
 ---
 
@@ -339,6 +339,8 @@ Call `loadEntries()` and `loadProjectOptions()` once at the bottom of the file.
 
 ## Phase 5 — MCP tools, still not mounted
 
+Dedicated walkthrough of the finished production file (line map, mount rules, quiz): **[MAIN.md](MAIN.md)** · study page **[main.html](main.html)**.
+
 In `main.py`, **above** the FastAPI constructor, create the MCP server and point every tool at `database.py`.
 
 ```python
@@ -417,6 +419,8 @@ The prompt does not query SQLite. It tells the model **which tool to call** and 
 ---
 
 ## Phase 6 — Mount MCP on FastAPI (the part people get wrong)
+
+Why these two lines are easy to get wrong, with quiz: [MAIN.md](MAIN.md#block-c--turn-mcp-into-asgi-then-build-fastapi-lines-81-89).
 
 Still in `main.py`, after the MCP primitives and **when constructing FastAPI**:
 
@@ -512,7 +516,7 @@ Notice three differences:
 - A generic SQL tool (`execute_query`) violates least privilege.
 - `uvicorn …:app` serves REST only; this file never mounts `/mcp`.
 
-After you understand it, close that file and keep shipping `main.py`.
+After you understand it, close that file and keep shipping `main.py`. Production walkthrough: [MAIN.md](MAIN.md).
 
 ---
 
@@ -593,5 +597,6 @@ Copy this list into a note. Tick it on a **new** folder, without looking at this
 - [ ] `http_app(path="/")` + `FastAPI(lifespan=...)` + `mount("/mcp")`
 - [ ] Browser row visible to MCP; MCP row visible in browser
 - [ ] You can explain why `main_to_understand.py` is not the production file
+- [ ] You walked through [MAIN.md](MAIN.md) / [main.html](main.html) beside `main.py`
 
 When every box is ticked, you did not just read TimeTrack. You can write it again.

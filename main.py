@@ -14,6 +14,8 @@ Setup:
 
 Then visit http://127.0.0.1:8000 for the website,
 and http://127.0.0.1:8000/mcp is the MCP endpoint (Streamable HTTP).
+
+Walkthrough: docs/MAIN.md  |  docs/main.html
 """
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles

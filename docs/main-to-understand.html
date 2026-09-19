@@ -275,8 +275,8 @@
       <div class="card-desc">FastAPI first. <code>from_fastapi</code> copies every route into tools. Extra raw SQL. <code>mcp.run()</code> for STDIO. Nothing mounted at <code>/mcp</code>.</div>
     </div>
     <div class="card">
-      <div class="card-title">Production main.py</div>
-      <div class="card-desc">Curated <code>@mcp.tool</code> first. <code>http_app(path="/")</code> plus <code>mount("/mcp")</code>. Prompt + <code>timesheet://projects</code>. One process, two doors.</div>
+      <div class="card-title">Production <a href="main.html">main.py</a></div>
+      <div class="card-desc">Curated <code>@mcp.tool</code> first. <code>http_app(path="/")</code> plus <code>mount("/mcp")</code>. Prompt + <code>timesheet://projects</code>. One process, two doors. Walkthrough: <a href="MAIN.md">MAIN.md</a> · <a href="main.html">main.html</a>.</div>
     </div>
   </div>
   <div class="callout">Official FastMCP docs make the same split: generate an MCP server <em>from</em> FastAPI, versus mount an MCP server <em>into</em> FastAPI. You are on the first path only.</div>
@@ -462,8 +462,8 @@ Assistant ─MCP─► FastMCP mcp ──┘</code></pre>
     <p class="quiz-a"><strong>False.</strong> A prompt returns instructions. Tools (or REST) touch the database.</p>
   </details>
 
-  <div class="callout teal" style="margin-top:2rem">When you can draw <code>app</code> vs <code>mcp</code>, explain the first <code>if __name__</code> trap, and say why raw SQL should not ship — close this file and rebuild the mounted shape in LEARNING_AND_REBUILD.md Phases 5–7.</div>
-  <p class="back">Also: <a href="ARCHITECTURE.md">ARCHITECTURE.md</a> · <a href="LEARNING_AND_REBUILD.md">LEARNING_AND_REBUILD.md</a></p>
+  <div class="callout teal" style="margin-top:2rem">When you can draw <code>app</code> vs <code>mcp</code>, explain the first <code>if __name__</code> trap, and say why raw SQL should not ship — close this file and rebuild the mounted shape in LEARNING_AND_REBUILD.md Phases 5–7. Then read the production walkthrough: <a href="main.html">main.html</a>.</div>
+  <p class="back">Also: <a href="ARCHITECTURE.md">ARCHITECTURE.md</a> · <a href="LEARNING_AND_REBUILD.md">LEARNING_AND_REBUILD.md</a> · <a href="MAIN.md">MAIN.md</a> · <a href="main.html">main.html</a></p>
 </section>
 
 </body>

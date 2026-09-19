@@ -69,6 +69,8 @@ time-track-mcp-server/
 └── docs/
     ├── ARCHITECTURE.md            This file
     ├── LEARNING_AND_REBUILD.md    Rebuild from empty
+    ├── MAIN.md                    Walkthrough of production main.py
+    ├── main.html                  Same walkthrough, browser study page
     ├── MAIN_TO_UNDERSTAND.md      Walkthrough of the learning file
     └── main-to-understand.html    Same walkthrough, browser study page
 ```
@@ -101,7 +103,7 @@ Package manager is **uv**. `uv.lock` pins the exact versions used to run the app
 
 ## Process startup sequence
 
-Order in `main.py` is intentional. Do not reverse it.
+Order in `main.py` is intentional. Do not reverse it. Line-by-line walkthrough: [MAIN.md](MAIN.md) · [main.html](main.html).
 
 ```
 1. import database as db

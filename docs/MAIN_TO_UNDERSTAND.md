@@ -32,7 +32,7 @@ This file is the **walkthrough style**:
 3. Optionally add MCP-only pieces (a raw SQL tool, a schema resource).
 4. Leave the safer, hand-curated tools **commented** so you can compare.
 
-It is **not** the mounted production shape (`FastMCP("TimeTrack")` first, then `http_app` + `app.mount("/mcp")`). That lives in the production `main.py` in the complete TimeTrack pack.
+It is **not** the mounted production shape (`FastMCP("TimeTrack")` first, then `http_app` + `app.mount("/mcp")`). That lives in production [`main.py`](../main.py). Walk through it in [MAIN.md](MAIN.md) or [main.html](main.html).
 
 | | This file | Production `main.py` |
 |---|---|---|
@@ -399,7 +399,7 @@ You can say, without looking:
 4. Raw SQL tools violate least privilege.
 5. Prompts and resources are why MCP is more than “REST with extra steps.”
 
-Then go rebuild the mounted shape: [LEARNING_AND_REBUILD.md](LEARNING_AND_REBUILD.md) Phases 5–7.
+Then go rebuild the mounted shape: [LEARNING_AND_REBUILD.md](LEARNING_AND_REBUILD.md) Phases 5–7. Production file walkthrough: [MAIN.md](MAIN.md).
 
 ---
 
