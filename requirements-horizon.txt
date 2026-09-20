@@ -1,0 +1,3 @@
+# Horizon installs this file only — not the root requirements.txt.
+# Do not add fastapi or uvicorn; the public URL is MCP, not the website.
+fastmcp>=4.0.3

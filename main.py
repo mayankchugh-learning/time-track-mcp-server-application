@@ -7,6 +7,9 @@ SQLite database of logged time entries:
 
 Both talk to the exact same database.py functions.
 
+The FastMCP object itself lives in mcp_server.py so Horizon can load
+mcp_server.py:mcp without importing FastAPI or ./static.
+
 Setup:
     uv init .
     uv add fastmcp fastapi "uvicorn[standard]"
@@ -21,64 +24,9 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from fastmcp import FastMCP
 
 import database as db
-
-# ---------- persistence, initialized once at startup ----------
-db.init_db()
-
-# ---------- Step 1: build the MCP server FIRST ----------
-# Hand-curated tools, calling the SAME database functions the REST API
-# below uses -- nothing duplicated between the two front doors.
-mcp = FastMCP("TimeTrack")
-
-
-@mcp.tool
-def log_time(employee_name: str, project: str, entry_date: str, hours: float, description: str = "") -> dict:
-    """Log a time entry. entry_date must be YYYY-MM-DD. Shows up on the website immediately."""
-    return db.log_time(employee_name, project, entry_date, hours, description)
-
-
-@mcp.tool
-def get_timesheet(employee_name: str, start_date: str = "", end_date: str = "") -> list[dict]:
-    """Get one employee's logged entries, optionally filtered to a date range (YYYY-MM-DD)."""
-    return db.get_timesheet(employee_name, start_date or None, end_date or None)
-
-
-@mcp.tool
-def get_project_summary(project: str) -> dict:
-    """Get total hours logged against a project, broken down by employee."""
-    return db.get_project_summary(project)
-
-
-@mcp.tool
-def list_projects() -> list[str]:
-    """List every project that has at least one logged time entry."""
-    return db.list_projects()
-
-
-@mcp.resource("timesheet://projects")
-def known_projects() -> list[str]:
-    """The current set of projects with logged time, for consistent naming."""
-    return db.list_projects()
-
-
-@mcp.prompt
-def generate_weekly_report(employee_name: str, week_start: str) -> str:
-    """Guides the AI to build a structured weekly hours report from this server's own tools."""
-    return f"""Build a weekly report for {employee_name}, starting {week_start}.
-
-1. Call get_timesheet with employee_name='{employee_name}', start_date='{week_start}'
-2. Group the results by project
-3. Present it as:
-   {{employee_name}} -- Week of {week_start}
-   [Project]: {{total hours for that project}}h
-   Total: {{sum of all hours}}h
-
-If no entries are found for that week, say so plainly instead of inventing data.
-"""
-
+from mcp_server import mcp
 
 # path="/" here, NOT "/mcp" -- app.mount() below adds that prefix.
 # Setting both would double up into /mcp/mcp -- a real, easy-to-miss bug,
@@ -87,7 +35,7 @@ If no entries are found for that week, say so plainly instead of inventing data.
 mcp_app = mcp.http_app(path="/")
 
 
-# ---------- Step 2: build the FastAPI app, lifespan wired in AT CONSTRUCTION ----------
+# ---------- FastAPI app, lifespan wired in AT CONSTRUCTION ----------
 app = FastAPI(title="TimeTrack", lifespan=mcp_app.lifespan)
 
 

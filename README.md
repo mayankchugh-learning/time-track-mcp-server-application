@@ -97,7 +97,7 @@ Restart the client after saving. Then:
 
 Both doors must see the same rows. That is the point of the project.
 
-## MCP surface (production `main.py`)
+## MCP surface (`mcp_server.py`, mounted by `main.py`)
 
 | Kind | Name | Role |
 |---|---|---|
@@ -114,9 +114,10 @@ Hand-curated tools are the production pattern. `main_to_understand.py` auto-wrap
 
 ```
 time-track-mcp-server-application/
-├── main.py                 Production app: MCP first, then FastAPI, then mounts
+├── main.py                 Website + REST; mounts mcp from mcp_server.py
+├── mcp_server.py           FastMCP object — Horizon entrypoint mcp_server.py:mcp
 ├── database.py             SQLite persistence and queries
-├── dummy.py                Minimal MCP-only calculator (Horizon deploy example)
+├── requirements-horizon.txt  Horizon deps (fastmcp only)
 ├── main_to_understand.py   Learning file: REST first, then FastMCP.from_fastapi
 ├── static/                 Three-tab vanilla UI
 ├── assets/                 Local vs remote MCP diagrams
@@ -128,7 +129,8 @@ time-track-mcp-server-application/
 │   ├── MAIN_TO_UNDERSTAND.md
 │   ├── main-to-understand.html
 │   ├── mcp_http_connector.md           ready-to-run curls (JSON files included)
-│   └── mcp_http_connector_learning.md  same guide; write each JSON body yourself
+│   ├── mcp_http_connector_learning.md  same guide; write each JSON body yourself
+│   └── steps-to-remote-mcp.md          Horizon: clean repo → GitHub → public /mcp
 └── pyproject.toml
 ```
 
@@ -145,3 +147,4 @@ Two mounting rules that break `/mcp` if you get them wrong:
 - [`main_to_understand.py` walkthrough](docs/MAIN_TO_UNDERSTAND.md) — REST first, `from_fastapi`, startup trap, quiz ([HTML](docs/main-to-understand.html))
 - [MCP HTTP connector](docs/mcp_http_connector.md) — curl handshake for `fastmcp run --transport http`, plus CLI / Inspector / Cursor
 - [MCP HTTP connector (self-learning)](docs/mcp_http_connector_learning.md) — same protocol; you create each JSON file
+- [Host MCP remotely (Horizon)](docs/steps-to-remote-mcp.md) — `mcp_server.py:mcp` + `requirements-horizon.txt`; learning files stay in git
