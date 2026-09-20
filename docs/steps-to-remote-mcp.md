@@ -15,39 +15,52 @@ This repo is the course project. **Do not delete** `docs/`, `assets/`, `static/`
 
 Horizon checks out the GitHub commit, then **installs one dependency file** and **imports one entrypoint**. Unused markdown and PNGs sit in the checkout; they are not the running server.
 
-| Horizon field | Value | Why |
+---
+
+## Horizon form — Deploy Your Server
+
+Sign in at [https://horizon.prefect.io](https://horizon.prefect.io/), connect GitHub, select
+`mayankchugh-learning/time-track-mcp-server-application` on branch `main`.
+
+### Required fields
+
+| Form field | Value to type |
+|---|---|
+| Server name | `time-track-mcp-app-server` |
+| Description | `TimeTrack MCP: log hours, list projects, timesheets, and project summaries from SQLite.` |
+| Entrypoint | `mcp_server.py:mcp` |
+
+Public URL (name + `.fastmcp.app/mcp`):
+
+```text
+https://time-track-mcp-app-server.fastmcp.app/mcp
+```
+
+Do **not** set Entrypoint to `main.py` or `main.py:mcp`. Importing `main.py` builds the website, mounts `StaticFiles`, and needs FastAPI.
+
+### Advanced Configuration — can stay empty
+
+You can leave **Requirements** and **Environment Variables** blank and click **Deploy Server**. That is a valid class deploy.
+
+| Advanced field | If empty | If you fill it |
 |---|---|---|
-| Repository | this GitHub repo | learning files stay here |
-| Server name | `timetrack` | becomes the public host name |
-| Entrypoint | `mcp_server.py:mcp` | FastMCP only — no FastAPI, no `./static` |
-| Dependency file | `requirements-horizon.txt` | installs `fastmcp` only |
+| Requirements | Horizon walks from the entrypoint folder and picks the first of `requirements.txt` → `uv.lock`+`pyproject.toml` → `pyproject.toml`. This repo hits root `requirements.txt`, so it installs `fastmcp` **and** FastAPI + uvicorn (unused at runtime). | `requirements-horizon.txt` — `fastmcp` only |
+| Environment Variables | SQLite uses `timetrack.db` next to the code (`database.py` default). | `TIMETRACK_DB_PATH=/tmp/timetrack.db` — still ephemeral on Horizon; seed rows can vanish when the instance is replaced |
 
-Do **not** set the entrypoint to `main.py:mcp`. Importing `main.py` builds the website, mounts `StaticFiles`, and needs FastAPI.
+No API keys are required. One variable per line, `KEY=value`, if you add any.
 
-Do **not** leave the dependency file blank. Horizon then walks from the entrypoint folder and picks the first of `requirements.txt` → `uv.lock`+`pyproject.toml` → `pyproject.toml`. Root `requirements.txt` also installs FastAPI and uvicorn, which Horizon does not need.
-
-Optional env var on the Horizon server: `TIMETRACK_DB_PATH` (SQLite file path). Default is `timetrack.db` next to the code. That disk is not a durable volume unless Horizon says so — seed data may reset when the instance is replaced.
-
-After deploy, paste the public URL (typically `https://timetrack.fastmcp.app/mcp`) into Cursor / Claude Desktop. That door is MCP only. The website stays on local `uvicorn main:app`.
+Click **Deploy Server**. After the build succeeds, paste the public `/mcp` URL into Cursor or Claude Desktop. That door is MCP only. The website stays on local `uv run uvicorn main:app --reload --host 127.0.0.1 --port 8000`.
 
 ---
 
 ## Slide steps (same idea)
 
-1. This learning repo is fine as the GitHub source. The *running* piece is `mcp_server.py` + `database.py` + `requirements-horizon.txt`.
-2. Those three files must stay at the repo root (same folder as `uv.lock` is optional for Horizon if you set the dependency file explicitly).
-3. Push to GitHub.
-4. Sign in at [https://horizon.prefect.io](https://horizon.prefect.io/) with that GitHub account.
-5. Select this repository.
-6. Configure:
-
-   | Field | Value |
-   |---|---|
-   | Server name | `timetrack` |
-   | Entrypoint | `mcp_server.py:mcp` |
-   | Dependency file | `requirements-horizon.txt` |
-
-Horizon handles HTTPS, `/mcp`, and the public URL.
+1. This learning repo is fine as the GitHub source. Horizon only *runs* `mcp_server.py` + `database.py`.
+2. Push `mcp_server.py` to GitHub **before** you deploy (Horizon builds the remote commit, not your unsaved laptop).
+3. Sign in at [https://horizon.prefect.io](https://horizon.prefect.io/) with that GitHub account.
+4. Select this repository, branch `main`.
+5. Fill the form as in the table above. Advanced may stay empty.
+6. Deploy. Horizon handles HTTPS, `/mcp`, and the public URL.
 
 ---
 

@@ -147,4 +147,4 @@ Two mounting rules that break `/mcp` if you get them wrong:
 - [`main_to_understand.py` walkthrough](docs/MAIN_TO_UNDERSTAND.md) — REST first, `from_fastapi`, startup trap, quiz ([HTML](docs/main-to-understand.html))
 - [MCP HTTP connector](docs/mcp_http_connector.md) — curl handshake for `fastmcp run --transport http`, plus CLI / Inspector / Cursor
 - [MCP HTTP connector (self-learning)](docs/mcp_http_connector_learning.md) — same protocol; you create each JSON file
-- [Host MCP remotely (Horizon)](docs/steps-to-remote-mcp.md) — `mcp_server.py:mcp` + `requirements-horizon.txt`; learning files stay in git
+- [Host MCP remotely (Horizon)](docs/steps-to-remote-mcp.md) — form values: `mcp_server.py:mcp`; Advanced may stay empty
