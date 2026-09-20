@@ -4,7 +4,7 @@ Open this guide beside [`main.py`](../main.py). Read a section, then look at the
 
 Study HTML (same content, nicer to browse): [main.html](main.html).
 
-Contrast file (REST first, then auto-wrap): [MAIN_TO_UNDERSTAND.md](MAIN_TO_UNDERSTAND.md). Architecture map: [ARCHITECTURE.md](ARCHITECTURE.md). Rebuild from empty: [LEARNING_AND_REBUILD.md](LEARNING_AND_REBUILD.md).
+Contrast file (REST first, then auto-wrap): [MAIN_TO_UNDERSTAND.md](MAIN_TO_UNDERSTAND.md). Smallest MCP-only file (calculator, no website): [DUMMY.md](DUMMY.md). Architecture map: [ARCHITECTURE.md](ARCHITECTURE.md). Rebuild from empty: [LEARNING_AND_REBUILD.md](LEARNING_AND_REBUILD.md).
 
 ---
 

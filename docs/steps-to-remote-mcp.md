@@ -97,4 +97,4 @@ The slide’s “clean separate repository” is only needed if you want Horizon
 
 This learning repo stays the place with notes and diagrams. Do that split only if clone size or “exactly what’s in the repo” becomes a problem. Same-repo + the table above is enough for class.
 
-For a calculator-only smoke test with no database, a smaller entrypoint would be a dedicated `dummy.py:mcp`. See [LEARNING_AND_REBUILD.md](LEARNING_AND_REBUILD.md) Phase 9–10 and [ARCHITECTURE.md](ARCHITECTURE.md) (Prefect Horizon).
+For a calculator-only smoke test with no database, a smaller entrypoint would be a dedicated `dummy.py:mcp`. Walkthrough: [DUMMY.md](DUMMY.md) · [dummy.html](dummy.html). Also [LEARNING_AND_REBUILD.md](LEARNING_AND_REBUILD.md) Phase 9–10 and [ARCHITECTURE.md](ARCHITECTURE.md) (Prefect Horizon).

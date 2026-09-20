@@ -63,6 +63,15 @@ uv run fastmcp run .\main.py --transport http --port 8000
 Raw curl handshake and every tool/resource/prompt call:
 [docs/mcp_http_connector.md](docs/mcp_http_connector.md).
 
+Smallest MCP-only file (calculator, no website, no SQLite). Horizon smoke-test entrypoint is `dummy.py:mcp`:
+
+```bash
+uv run fastmcp inspect dummy.py:mcp
+uv run fastmcp dev dummy.py
+```
+
+Walkthrough: [docs/DUMMY.md](docs/DUMMY.md) ([HTML](docs/dummy.html)).
+
 Learning file (REST first, then `FastMCP.from_fastapi` — not the production design):
 
 ```bash
@@ -110,6 +119,8 @@ Both doors must see the same rows. That is the point of the project.
 
 Hand-curated tools are the production pattern. `main_to_understand.py` auto-wraps REST and also exposes raw SQL — useful for study, unsafe to ship.
 
+Calculator smoke test (`dummy.py`) — five tools, no resources, no prompts: `add`, `subtract`, `multiply`, `divide`, `power`.
+
 ## Repository map
 
 ```
@@ -118,12 +129,15 @@ time-track-mcp-server-application/
 ├── mcp_server.py           FastMCP object — Horizon entrypoint mcp_server.py:mcp
 ├── database.py             SQLite persistence and queries
 ├── requirements-horizon.txt  Horizon deps (fastmcp only)
+├── dummy.py                Minimal MCP-only calculator (Horizon smoke test)
 ├── main_to_understand.py   Learning file: REST first, then FastMCP.from_fastapi
 ├── static/                 Three-tab vanilla UI
 ├── assets/                 Local vs remote MCP diagrams
 ├── docs/
 │   ├── ARCHITECTURE.md
 │   ├── LEARNING_AND_REBUILD.md
+│   ├── DUMMY.md                Walkthrough of dummy.py
+│   ├── dummy.html              Same walkthrough, browser study page
 │   ├── MAIN.md                 Walkthrough of production main.py
 │   ├── main.html               Same walkthrough, browser study page
 │   ├── MAIN_TO_UNDERSTAND.md
@@ -143,6 +157,7 @@ Two mounting rules that break `/mcp` if you get them wrong:
 
 - [Application architecture](docs/ARCHITECTURE.md) — process shape, schema, REST, MCP, request flows
 - [Learn it, then build it again](docs/LEARNING_AND_REBUILD.md) — rebuild from an empty folder, with checkpoints
+- [`dummy.py` walkthrough](docs/DUMMY.md) — smallest MCP server, `dummy.py:mcp`, quiz ([HTML](docs/dummy.html))
 - [`main.py` walkthrough](docs/MAIN.md) — MCP first, mount, lifespan, quiz ([HTML](docs/main.html))
 - [`main_to_understand.py` walkthrough](docs/MAIN_TO_UNDERSTAND.md) — REST first, `from_fastapi`, startup trap, quiz ([HTML](docs/main-to-understand.html))
 - [MCP HTTP connector](docs/mcp_http_connector.md) — curl handshake for `fastmcp run --transport http`, plus CLI / Inspector / Cursor

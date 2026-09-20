@@ -69,6 +69,8 @@ time-track-mcp-server/
 └── docs/
     ├── ARCHITECTURE.md            This file
     ├── LEARNING_AND_REBUILD.md    Rebuild from empty
+    ├── DUMMY.md                   Walkthrough of dummy.py
+    ├── dummy.html                 Same walkthrough, browser study page
     ├── MAIN.md                    Walkthrough of production main.py
     ├── main.html                  Same walkthrough, browser study page
     ├── MAIN_TO_UNDERSTAND.md      Walkthrough of the learning file
@@ -362,6 +364,8 @@ A five-function calculator (`add`, `subtract`, `multiply`, `divide`, `power`). N
 
 Purpose: the smallest possible Horizon / FastMCP Cloud deploy. Entrypoint is `dummy.py:mcp`. Useful when you want to learn “what is an MCP server” before “how do I mount it inside FastAPI.”
 
+Full walkthrough (blocks, entrypoint syntax, quiz): **[DUMMY.md](DUMMY.md)** · **[dummy.html](dummy.html)**.
+
 ### `main_to_understand.py` — REST first, then auto-MCP
 
 Written as a study file:
@@ -414,7 +418,7 @@ Formerly FastMCP Cloud. Connect the GitHub repo; dependencies come from `pyproje
 
 Horizon is built for the MCP process. Static website routes may not ship with that deploy. If you need both doors on the public internet, deploy the whole uvicorn app to a general host (Railway, Render, a VM) instead.
 
-For a Horizon-only smoke test, `dummy.py:mcp` is the smaller entrypoint.
+For a Horizon-only smoke test, `dummy.py:mcp` is the smaller entrypoint. Walkthrough: [DUMMY.md](DUMMY.md).
 
 ---
 

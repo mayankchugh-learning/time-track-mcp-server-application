@@ -525,6 +525,7 @@ After you understand it, close that file and keep shipping `main.py`. Production
 `dummy.py` is a calculator with no website and no database.
 
 ```bash
+uv run fastmcp inspect dummy.py:mcp
 uv run fastmcp dev dummy.py
 ```
 
@@ -534,6 +535,8 @@ Rebuild it yourself if you want the Horizon path in isolation:
 - Five `@mcp.tool` functions
 - `if __name__ == "__main__": mcp.run()`
 - Horizon entrypoint: `dummy.py:mcp`
+
+Line-by-line walkthrough (entrypoint syntax, `divide` error, quiz): [DUMMY.md](DUMMY.md) · [dummy.html](dummy.html).
 
 Then go back to TimeTrack. The calculator teaches the decorator. TimeTrack teaches a product.
 
