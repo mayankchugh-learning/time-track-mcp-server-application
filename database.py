@@ -5,10 +5,47 @@ time: logging billable hours against projects, and summarizing them.
 """
 import os
 import sqlite3
+import tempfile
 from pathlib import Path
 
-_DEFAULT_DB_PATH = Path(__file__).resolve().parent / "timetrack.db"
-DB_PATH = Path(os.environ.get("TIMETRACK_DB_PATH", _DEFAULT_DB_PATH))
+# Next to the code on a writable laptop checkout. Horizon packages the
+# checkout read-only after import-time init_db() baked a seeded file into
+# the artifact — SQLite can still READ that file, but INSERT fails with
+# "attempt to write a readonly database" because it also needs a journal
+# in the same directory. Fall back to the OS temp dir in that case.
+_LOCAL_DB_PATH = Path(__file__).resolve().parent / "timetrack.db"
+_TEMP_DB_PATH = Path(tempfile.gettempdir()) / "timetrack.db"
+
+
+def _path_is_sqlite_writable(path: Path) -> bool:
+    """True when SQLite can write the db file and create a journal beside it."""
+    probe = None
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        fd, probe = tempfile.mkstemp(prefix=".timetrack_write_probe_", dir=path.parent)
+        os.close(fd)
+        if path.exists():
+            with path.open("r+b"):
+                pass
+        return True
+    except OSError:
+        return False
+    finally:
+        if probe:
+            try:
+                os.remove(probe)
+            except OSError:
+                pass
+
+
+def _resolve_db_path() -> Path:
+    candidate = Path(os.environ.get("TIMETRACK_DB_PATH", _LOCAL_DB_PATH))
+    if _path_is_sqlite_writable(candidate):
+        return candidate
+    return _TEMP_DB_PATH
+
+
+DB_PATH = _resolve_db_path()
 
 
 def get_connection():

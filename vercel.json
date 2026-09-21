@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "env": {
+    "TIMETRACK_DB_PATH": "/tmp/timetrack.db"
+  },
+  "functions": {
+    "main.py": {
+      "excludeFiles": "{docs/**,assets/**}"
+    }
+  }
+}

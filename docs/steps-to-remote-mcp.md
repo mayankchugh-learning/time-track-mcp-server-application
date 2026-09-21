@@ -45,7 +45,7 @@ You can leave **Requirements** and **Environment Variables** blank and click **D
 | Advanced field | If empty | If you fill it |
 |---|---|---|
 | Requirements | Horizon walks from the entrypoint folder and picks the first of `requirements.txt` → `uv.lock`+`pyproject.toml` → `pyproject.toml`. This repo hits root `requirements.txt`, so it installs `fastmcp` **and** FastAPI + uvicorn (unused at runtime). | `requirements-horizon.txt` — `fastmcp` only |
-| Environment Variables | SQLite uses `timetrack.db` next to the code (`database.py` default). | `TIMETRACK_DB_PATH=/tmp/timetrack.db` — still ephemeral on Horizon; seed rows can vanish when the instance is replaced |
+| Environment Variables | Leave empty. `database.py` writes `timetrack.db` next to the code when that folder is writable, and falls back to the OS temp dir on Horizon (the checkout is read-only — that is the `"attempt to write a readonly database"` error). | `TIMETRACK_DB_PATH=/tmp/timetrack.db` — same writable-temp behavior, explicit. Data is still ephemeral on Horizon. |
 
 No API keys are required. One variable per line, `KEY=value`, if you add any.
 

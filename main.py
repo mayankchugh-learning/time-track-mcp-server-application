@@ -20,6 +20,9 @@ and http://127.0.0.1:8000/mcp is the MCP endpoint (Streamable HTTP).
 
 Walkthrough: docs/MAIN.md  |  docs/main.html
 """
+import os
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -28,11 +31,18 @@ from pydantic import BaseModel
 import database as db
 from mcp_server import mcp
 
+STATIC_DIR = Path(__file__).resolve().parent / "static"
+
 # path="/" here, NOT "/mcp" -- app.mount() below adds that prefix.
 # Setting both would double up into /mcp/mcp -- a real, easy-to-miss bug,
 # verified against FastMCP's own documentation.
+# Vercel runs each request in a short-lived function, so Streamable HTTP
+# must not keep an in-memory session across invocations.
 
-mcp_app = mcp.http_app(path="/")
+mcp_app = mcp.http_app(
+    path="/",
+    stateless_http=os.environ.get("VERCEL") == "1",
+)
 
 
 # ---------- FastAPI app, lifespan wired in AT CONSTRUCTION ----------
@@ -74,8 +84,8 @@ def api_get_timesheet(employee_name: str, start_date: str = None, end_date: str 
 
 @app.get("/")
 def serve_index():
-    return FileResponse("static/index.html")
+    return FileResponse(STATIC_DIR / "index.html")
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/mcp", mcp_app)
